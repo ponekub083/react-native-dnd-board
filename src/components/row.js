@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
+import { TouchableWithoutFeedback, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import style from '../style';
