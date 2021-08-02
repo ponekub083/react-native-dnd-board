@@ -7,6 +7,7 @@ export default class Column {
     this.index = index;
     this.data = data;
     this.rows = rows;
+    this.hidden = false;
   }
 
   getAttributes = () => {
@@ -18,32 +19,37 @@ export default class Column {
       index: this.index,
       data: this.data,
       rows: this.rows,
+      hidden: this.hidden,
     };
   };
 
-  setRef = ref => {
+  setRef = (ref) => {
     this.ref = ref;
   };
 
-  setIndex = index => {
+  setIndex = (index) => {
     this.index = index;
   };
 
-  setLayout = layout => {
+  setLayout = (layout) => {
     this.layout = layout;
   };
 
-  setScrollRef = scrollRef => {
+  setHidden = (hidden) => {
+    this.hidden = hidden;
+  };
+
+  setScrollRef = (scrollRef) => {
     this.scrollRef = scrollRef;
   };
 
-  scrollOffset = offset => {
+  scrollOffset = (offset) => {
     if (this.scrollRef) {
       this.scrollRef.scrollToOffset({ offset: offset });
     }
   };
 
-  addRow = row => {
+  addRow = (row) => {
     row.columnId = this.id;
     row.setIndex(this.rows.length);
     this.rows.push(row);
@@ -55,15 +61,15 @@ export default class Column {
     });
   };
 
-  measureRowLayout = scrollOffsetX => {
-    this.rows.forEach(row => {
+  measureRowLayout = (scrollOffsetX) => {
+    this.rows.forEach((row) => {
       if (row.measureLayout) {
         row.measureLayout(scrollOffsetX);
       }
     });
   };
 
-  measureLayout = scrollOffsetX => {
+  measureLayout = (scrollOffsetX) => {
     if (this.ref && this.ref.measure) {
       this.ref.measure((fx, fy, width, height, px, py) => {
         if (scrollOffsetX) {

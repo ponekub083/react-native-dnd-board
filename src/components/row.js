@@ -32,7 +32,6 @@ const Row = memo(
       >
         <Animated.View style={hidden ? style.invisible : style.visible}>
           {component}
-          <Text>Test</Text>
         </Animated.View>
       </TouchableWithoutFeedback>
     );

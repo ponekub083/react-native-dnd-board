@@ -14,7 +14,7 @@ export default class Repository {
     this.reload = null;
   }
 
-  setReload = callback => {
+  setReload = (callback) => {
     this.reload = callback;
   };
 
@@ -31,7 +31,7 @@ export default class Repository {
     }
   }
 
-  initialData = data => {
+  initialData = (data) => {
     data.forEach((column, columnIndex) => {
       const rows = column.rows.map((item, index) => {
         return new RowItem({
@@ -52,7 +52,7 @@ export default class Repository {
       this.originalData[column.id] = {
         id: column.id,
         index: columnIndex,
-        rows: rows.map(row => ({
+        rows: rows.map((row) => ({
           id: row.id,
           index: row.index,
         })),
@@ -60,18 +60,19 @@ export default class Repository {
     });
   };
 
-  updateData = data => {
+  updateData = (data) => {
     data.forEach((column, columnIndex) => {
       const rows = column.rows.map((item, index) => {
         let existingAttributes = {};
 
         if (this.columns[column.id]) {
           const existingIndex = this.columns[column.id].rows.findIndex(
-            row => row.id === item.id,
+            (row) => row.id === item.id,
           );
           if (existingIndex > -1) {
-            existingAttributes =
-              this.columns[column.id].rows[existingIndex].getAttributes();
+            existingAttributes = this.columns[column.id].rows[
+              existingIndex
+            ].getAttributes();
           }
         }
 
@@ -99,7 +100,7 @@ export default class Repository {
       this.originalData[column.id] = {
         id: column.id,
         index: columnIndex,
-        rows: rows.map(row => ({
+        rows: rows.map((row) => ({
           id: row.id,
           index: row.index,
         })),
@@ -136,7 +137,7 @@ export default class Repository {
     }
   };
 
-  deleteColumn = columnId => {
+  deleteColumn = (columnId) => {
     delete this.columns[columnId];
     delete this.originalData[columnId];
 
@@ -168,8 +169,8 @@ export default class Repository {
     let rowIndex = -1;
     let columnId = '';
 
-    const columnIndex = Object.values(this.columns).findIndex(column => {
-      const i = column.rows.findIndex(row => row.id === rowId);
+    const columnIndex = Object.values(this.columns).findIndex((column) => {
+      const i = column.rows.findIndex((row) => row.id === rowId);
       if (i > -1) {
         columnId = column.id;
         rowIndex = i;
@@ -189,13 +190,13 @@ export default class Repository {
     }
   };
 
-  deleteRow = rowId => {
+  deleteRow = (rowId) => {
     // Manual find index to optimize loop time
     let rowIndex = -1;
     let columnId = '';
 
-    const columnIndex = Object.values(this.columns).findIndex(column => {
-      const i = column.rows.findIndex(row => row.id === rowId);
+    const columnIndex = Object.values(this.columns).findIndex((column) => {
+      const i = column.rows.findIndex((row) => row.id === rowId);
       if (i > -1) {
         columnId = column.id;
         rowIndex = i;
@@ -216,11 +217,11 @@ export default class Repository {
   };
 
   updateOriginalData = () => {
-    Object.keys(this.columns).forEach(columnId => {
+    Object.keys(this.columns).forEach((columnId) => {
       this.originalData[columnId] = {
         id: this.columns[columnId].id,
         index: this.columns[columnId].index,
-        rows: this.columns[columnId].rows.map(row => ({
+        rows: this.columns[columnId].rows.map((row) => ({
           id: row.id,
           index: row.index,
         })),
@@ -232,14 +233,14 @@ export default class Repository {
     const columns = [];
     const rows = [];
 
-    Object.keys(this.originalData).forEach(columnId => {
+    Object.keys(this.originalData).forEach((columnId) => {
       if (this.originalData[columnId].index !== this.columns[columnId].index) {
         columns.push({ id: columnId, index: this.columns[columnId].index });
       }
 
-      this.columns[columnId].rows.forEach(row => {
+      this.columns[columnId].rows.forEach((row) => {
         const rowIndex = this.originalData[columnId].rows.findIndex(
-          item => item.id === row.id,
+          (item) => item.id === row.id,
         );
         if (rowIndex > -1 && row.index !== rowIndex) {
           rows.push({ id: row.id, index: row.index });
@@ -256,11 +257,11 @@ export default class Repository {
     );
   };
 
-  getColumnById = columnId => {
+  getColumnById = (columnId) => {
     return this.columns[columnId];
   };
 
-  getRowsByColumnId = columnId => {
+  getRowsByColumnId = (columnId) => {
     return this.columns[columnId].rows;
   };
 
@@ -276,16 +277,23 @@ export default class Repository {
     }
   };
 
-  measureColumnsLayout = scrollOffset => {
-    Object.keys(this.columns).forEach(columnId => {
+  measureColumnsLayout = (scrollOffset) => {
+    Object.keys(this.columns).forEach((columnId) => {
       this.columns[columnId].measureLayout(scrollOffset);
     });
+  };
+
+  hideCol = (Col) => {
+    const ColIndex = this.columns.findIndex((item) => item.id === Col.id);
+    if (ColIndex > -1) {
+      this.columns[ColIndex].setHidden(true);
+    }
   };
 
   updateRowRef = (columnId, rowId, ref) => {
     if (this.columns[columnId]) {
       const rowIndex = this.columns[columnId].rows.findIndex(
-        row => row.id === rowId,
+        (row) => row.id === rowId,
       );
       if (rowIndex > -1 && this.columns[columnId].rows[rowIndex].setRef) {
         this.columns[columnId].rows[rowIndex].setRef(ref);
@@ -295,38 +303,38 @@ export default class Repository {
 
   updateRowLayout = (columnId, rowId) => {
     const rowIndex = this.columns[columnId].rows.findIndex(
-      row => row.id === rowId,
+      (row) => row.id === rowId,
     );
     if (rowIndex > -1 && this.columns[columnId].rows[rowIndex].measureLayout) {
       this.columns[columnId].rows[rowIndex].measureLayout();
     }
   };
 
-  hideRow = row => {
+  hideRow = (row) => {
     const rowIndex = this.columns[row.columnId].rows.findIndex(
-      item => item.id === row.id,
+      (item) => item.id === row.id,
     );
     if (rowIndex > -1) {
       this.columns[row.columnId].rows[rowIndex].setHidden(true);
     }
   };
 
-  showRow = row => {
+  showRow = (row) => {
     const rowIndex = this.columns[row.columnId].rows.findIndex(
-      item => item.id === row.id,
+      (item) => item.id === row.id,
     );
     if (rowIndex > -1) {
       this.columns[row.columnId].rows[rowIndex].setHidden(false);
     }
   };
 
-  findRow = row => {
-    return this.columns[row.columnId].rows.find(item => item.id === row.id);
+  findRow = (row) => {
+    return this.columns[row.columnId].rows.find((item) => item.id === row.id);
   };
 
   moveRow = (draggedRow, x, y, changeColumnCallback) => {
     const rowIndex = this.columns[draggedRow.columnId].rows.findIndex(
-      item => item.id === draggedRow.id,
+      (item) => item.id === draggedRow.id,
     );
 
     if (rowIndex > -1) {

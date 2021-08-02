@@ -7,6 +7,7 @@ import {
   StatusBar,
   TouchableOpacity,
   Dimensions,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 import Board, { Repository } from 'react-native-dnd-board';
@@ -156,24 +157,35 @@ const App = () => {
     repository.deleteColumn(columnId);
   };
 
-  const renderColumn = ({ item, columnComponent, layoutProps, index }) => {
+  const renderColumn = ({
+    item,
+    columnComponent,
+    layoutProps,
+    index,
+    drag,
+  }) => {
     return (
-      <View style={styles.column} {...layoutProps}>
-        <View style={styles.columnHeader}>
-          <Text style={styles.columnName}>{item.name}</Text>
+      <TouchableWithoutFeedback
+        key={`Col-${index}`}
+        onLongPress={drag}
+        delayLongPress={300}>
+        <View style={styles.column} {...layoutProps}>
+          <View style={styles.columnHeader}>
+            <Text style={styles.columnName}>{item.name}</Text>
+            <TouchableOpacity
+              hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+              onPress={() => deleteColumn(item.id)}>
+              <Text>✕</Text>
+            </TouchableOpacity>
+          </View>
+          {columnComponent}
           <TouchableOpacity
-            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-            onPress={() => deleteColumn(item.id)}>
-            <Text>✕</Text>
+            style={styles.addCard}
+            onPress={() => addCard(item.id)}>
+            <Text>+ Add Card</Text>
           </TouchableOpacity>
         </View>
-        {columnComponent}
-        <TouchableOpacity
-          style={styles.addCard}
-          onPress={() => addCard(item.id)}>
-          <Text>+ Add Card</Text>
-        </TouchableOpacity>
-      </View>
+      </TouchableWithoutFeedback>
     );
   };
 
@@ -183,6 +195,10 @@ const App = () => {
 
   const onDragEnd = (fromColumnId, toColumnId, card) => {
     //
+
+    console.log(
+      `Drag [${card.id}]  > form [${fromColumnId}]  to [${toColumnId}]`,
+    );
   };
 
   return (

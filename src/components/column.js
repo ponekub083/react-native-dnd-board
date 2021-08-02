@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { View } from 'react-native';
+import { TouchableWithoutFeedback, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-
+import Animated from 'react-native-reanimated';
 import style from '../style';
 import Row from './row';
 
@@ -21,12 +21,12 @@ const Column = ({
   const verticalOffset = useRef(0);
   const columnRef = useRef();
 
-  const onScroll = useCallback(event => {
+  const onScroll = useCallback((event) => {
     verticalOffset.current = event.nativeEvent.contentOffset.x;
   }, []);
 
   const onScrollEnd = useCallback(
-    event => {
+    (event) => {
       verticalOffset.current = event.nativeEvent.contentOffset.x;
       column.measureRowLayout();
     },
@@ -36,8 +36,9 @@ const Column = ({
   const renderRowItem = ({ item, index }) => {
     return (
       <View
-        ref={ref => repository.updateRowRef(column.id, item.id, ref)}
-        onLayout={layout => repository.updateRowLayout(column.id, item.id)}>
+        ref={(ref) => repository.updateRowRef(column.id, item.id, ref)}
+        onLayout={(layout) => repository.updateRowLayout(column.id, item.id)}
+      >
         <Row
           row={item}
           move={move}
@@ -64,7 +65,7 @@ const Column = ({
     setRows(column.rows);
   }, [column.id, column.rows, column.rows.length, repository]);
 
-  const setRef = ref => {
+  const setRef = (ref) => {
     columnRef.current = ref;
     repository.setColumnScrollRef(column.id, columnRef.current);
   };
