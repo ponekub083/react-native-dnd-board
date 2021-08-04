@@ -187,7 +187,7 @@ const DraggableBoard = ({
       if (columnAtIndex && scrollViewRef.current) {
         // handle scroll horizontal
 
-        console.log({ x, xScrollThreshold, device: Utils.deviceWidth });
+        // console.log({ x, xScrollThreshold, device: Utils.deviceWidth });
         if (x + xScrollThreshold > Utils.deviceWidth) {
           scrollOffset.current += SCROLL_STEP;
           scrollViewRef.current.scrollTo({
@@ -300,7 +300,7 @@ const DraggableBoard = ({
   };
 
   const drag = (column) => {
-    console.log('Drag Column : ', column);
+    // console.log('Drag Column : ', column);
     if (onDragColStart) {
       onDragColStart();
     }

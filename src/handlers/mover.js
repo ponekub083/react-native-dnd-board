@@ -72,28 +72,28 @@ export default class Mover {
       //
       const current = repository.columns[columnId].index;
 
-      console.log('Column [', columnId, '] : Index [', current, ']');
+      // console.log('Column [', columnId, '] : Index [', current, ']');
 
       if (current > fromColumnIndex && current < toColumnIndex) {
         repository.columns[columnId].index -= 1;
 
-        console.log('Condition 1 : -');
+        // console.log('Condition 1 : -');
       } else if (current < fromColumnIndex && current > toColumnIndex) {
         repository.columns[columnId].index += 1;
-        console.log('Condition 2 : +');
+        // console.log('Condition 2 : +');
       } else if (current == toColumnIndex && current > fromColumnIndex) {
         // move to Rigth
         repository.columns[columnId].index -= 1;
-        console.log('Condition 3 : -');
+        // console.log('Condition 3 : -');
       } else if (current == toColumnIndex && current < fromColumnIndex) {
         //  move to Left
         repository.columns[columnId].index += 1;
-        console.log('Condition 4 : +');
+        // console.log('Condition 4 : +');
       } else if (current == fromColumnIndex) {
         repository.columns[columnId].index = toColumnIndex;
       }
 
-      console.log(
+      // console.log(
         'Column [',
         columnId,
         '] = ',
