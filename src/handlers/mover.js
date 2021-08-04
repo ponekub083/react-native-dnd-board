@@ -1,3 +1,5 @@
+import Utils from '../commons/utils';
+
 export default class Mover {
   constructor() {
     this.THRESHOLD = 35;
@@ -8,7 +10,7 @@ export default class Mover {
   }
 
   findColumnAtPosition = (columns, x, y) => {
-    return columns.find(column => {
+    return columns.find((column) => {
       let layout = column.layout;
 
       if (!layout) {
@@ -50,7 +52,7 @@ export default class Mover {
   };
 
   findRowAtPosition = (rows, x, y, draggedRow) => {
-    let item = rows.find(i => this.selectItem(x, y, draggedRow, i));
+    let item = rows.find((i) => this.selectItem(x, y, draggedRow, i));
 
     let firstItem = rows[0];
     if (!item && firstItem && firstItem.layout && y <= firstItem.layout.y) {
@@ -65,10 +67,49 @@ export default class Mover {
     return item;
   };
 
+  moveColumn = (repository, col, fromColumnIndex, toColumnIndex) => {
+    Object.keys(repository.columns).forEach((columnId) => {
+      //
+      const current = repository.columns[columnId].index;
+
+      console.log('Column [', columnId, '] : Index [', current, ']');
+
+      if (current > fromColumnIndex && current < toColumnIndex) {
+        repository.columns[columnId].index -= 1;
+
+        console.log('Condition 1 : -');
+      } else if (current < fromColumnIndex && current > toColumnIndex) {
+        repository.columns[columnId].index += 1;
+        console.log('Condition 2 : +');
+      } else if (current == toColumnIndex && current > fromColumnIndex) {
+        // move to Rigth
+        repository.columns[columnId].index -= 1;
+        console.log('Condition 3 : -');
+      } else if (current == toColumnIndex && current < fromColumnIndex) {
+        //  move to Left
+        repository.columns[columnId].index += 1;
+        console.log('Condition 4 : +');
+      } else if (current == fromColumnIndex) {
+        repository.columns[columnId].index = toColumnIndex;
+      }
+
+      console.log(
+        'Column [',
+        columnId,
+        '] = ',
+        repository.columns[columnId].index,
+      );
+    });
+
+    if (Utils.isFunction(repository.reload)) {
+      repository.reload();
+    }
+  };
+
   moveToOtherColumn = (repository, row, fromColumnId, toColumnId) => {
     repository.columns[fromColumnId].rows = repository.columns[
       fromColumnId
-    ].rows.filter(item => item.id !== row.id);
+    ].rows.filter((item) => item.id !== row.id);
 
     repository.columns[fromColumnId].measureRowIndex();
     repository.columns[toColumnId].addRow(row);
@@ -77,7 +118,25 @@ export default class Mover {
     repository.notify(toColumnId, 'reload');
   };
 
-  switchItems = (firstItem, secondItem) => {
+  switchColumnItems = (firstItem, secondItem) => {
+    if (!firstItem || !secondItem || !firstItem.layout || !secondItem.layout) {
+      return;
+    }
+
+    const item = { ...firstItem };
+
+    firstItem.setRef(secondItem.ref);
+    firstItem.setIndex(secondItem.index);
+    firstItem.setData(secondItem.data);
+    firstItem.setHidden(secondItem.hidden);
+
+    secondItem.setRef(item.ref);
+    secondItem.setIndex(item.index);
+    secondItem.setData(item.data);
+    secondItem.setHidden(item.hidden);
+  };
+
+  switchRowItems = (firstItem, secondItem) => {
     if (!firstItem || !secondItem || !firstItem.layout || !secondItem.layout) {
       return;
     }
@@ -108,12 +167,12 @@ export default class Mover {
     if (draggedRowIndex > rowAtPositionIndex) {
       // Move up
       for (let i = draggedRowIndex - 1; i >= rowAtPositionIndex; i--) {
-        this.switchItems(rows[i], rows[i + 1]);
+        this.switchRowItems(rows[i], rows[i + 1]);
       }
     } else {
       // Move down
       for (let i = draggedRowIndex; i < rowAtPositionIndex; i++) {
-        this.switchItems(rows[i], rows[i + 1]);
+        this.switchRowItems(rows[i], rows[i + 1]);
       }
     }
 

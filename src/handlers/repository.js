@@ -283,11 +283,12 @@ export default class Repository {
     });
   };
 
+  showCol = (Col) => {
+    this.columns[Col.id].setHidden(false);
+  };
+
   hideCol = (Col) => {
-    const ColIndex = this.columns.findIndex((item) => item.id === Col.id);
-    if (ColIndex > -1) {
-      this.columns[ColIndex].setHidden(true);
-    }
+    this.columns[Col.id].setHidden(true);
   };
 
   updateRowRef = (columnId, rowId, ref) => {
@@ -350,6 +351,7 @@ export default class Repository {
       if (!columnAtPosition) {
         return;
       }
+
       const toColumnId = columnAtPosition.id;
       if (toColumnId !== fromColumnId) {
         this.mover.moveToOtherColumn(this, row, fromColumnId, toColumnId);
@@ -384,6 +386,31 @@ export default class Repository {
 
       return columnAtPosition;
     }
+  };
+
+  moveCol = (draggedCol, x, y, changeColumnCallback) => {
+    const col = this.columns[draggedCol.id];
+
+    const fromColumnIndex = col.index;
+    const columnAtPosition = this.mover.findColumnAtPosition(
+      this.getColumns(),
+      x,
+      y,
+    );
+
+    if (!columnAtPosition) {
+      return;
+    }
+
+    const toColumnIndex = columnAtPosition.index;
+    if (toColumnIndex !== fromColumnIndex) {
+      this.mover.moveColumn(this, col, fromColumnIndex, toColumnIndex);
+      if (changeColumnCallback) {
+        changeColumnCallback(fromColumnIndex, toColumnIndex);
+      }
+    }
+
+    return columnAtPosition;
   };
 
   setColumnScrollRef = (columnId, ref) => {

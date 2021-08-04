@@ -10,8 +10,8 @@ import {
   State,
   ScrollView,
 } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-
 import style from './style';
 import Column from './components/column';
 import Repository from './handlers/repository';
@@ -19,7 +19,7 @@ import Utils from './commons/utils';
 
 const { block, call, cond } = Animated;
 
-const SCROLL_THRESHOLD = 50;
+const SCROLL_THRESHOLD = Utils.deviceWidth * 0.15;
 const SCROLL_STEP = 8;
 
 const DraggableBoard = ({
@@ -30,17 +30,21 @@ const DraggableBoard = ({
   accessoryRight,
   activeRowStyle,
   activeRowRotation = 8,
+  activeColRotation = 0,
   xScrollThreshold = SCROLL_THRESHOLD,
   yScrollThreshold = SCROLL_THRESHOLD,
   dragSpeedFactor = 1,
   onRowPress = () => {},
-  onDragStart = () => {},
+  onColPress = () => {},
+  onDragRowStart = () => {},
+  onDragColStart = () => {},
   onDragEnd = () => {},
   style: boardStyle,
   horizontal = true,
 }) => {
   const [forceUpdate, setForceUpdate] = useState(false);
   const [hoverComponent, setHoverComponent] = useState(null);
+  const [isColunm, setIsColunm] = useState(false);
   const [movingMode, setMovingMode] = useState(false);
 
   let translateX = useRef(new Animated.Value(0)).current;
@@ -96,16 +100,25 @@ const DraggableBoard = ({
 
           if (onDragEnd) {
             onDragEnd(
-              hoverRowItem.current.oldColumnId,
-              hoverRowItem.current.columnId,
-              hoverRowItem.current,
+              isColunm
+                ? hoverColItem.current.oldColumnIndex
+                : hoverRowItem.current.oldColumnId,
+              isColunm
+                ? hoverColItem.current.columnIndex
+                : hoverRowItem.current.columnId,
+              isColunm ? hoverColItem.current : hoverRowItem.current,
             );
 
             repository.updateOriginalData();
           }
 
-          repository.showRow(hoverRowItem.current);
-          hoverRowItem.current = null;
+          if (isColunm) {
+            repository.showCol(hoverColItem.current);
+            hoverColItem.current = null;
+          } else {
+            repository.showRow(hoverRowItem.current);
+            hoverRowItem.current = null;
+          }
         }
 
         break;
@@ -117,8 +130,13 @@ const DraggableBoard = ({
     hoverRowItem.current.oldColumnId = fromColumnId;
   };
 
+  const listenColumnChange = (fromColumnId, toColumnId) => {
+    hoverColItem.current.columnIndex = toColumnId;
+    hoverColItem.current.oldColumnIndex = fromColumnId;
+  };
+
   const handleRowPosition = ([x, y]) => {
-    if (hoverRowItem.current && (x || y)) {
+    if (hoverRowItem.current && (x || y) && !isColunm) {
       const columnAtPosition = repository.moveRow(
         hoverRowItem.current,
         x,
@@ -158,6 +176,37 @@ const DraggableBoard = ({
 
   const handleColumnPosition = ([x, y]) => {
     //
+    if (hoverColItem.current && (x || y) && isColunm) {
+      const columnAtIndex = repository.moveCol(
+        hoverColItem.current,
+        x,
+        y,
+        listenColumnChange,
+      );
+
+      if (columnAtIndex && scrollViewRef.current) {
+        // handle scroll horizontal
+
+        console.log({ x, xScrollThreshold, device: Utils.deviceWidth });
+        if (x + xScrollThreshold > Utils.deviceWidth) {
+          scrollOffset.current += SCROLL_STEP;
+          scrollViewRef.current.scrollTo({
+            x: scrollOffset.current * dragSpeedFactor,
+            y: 0,
+            animated: true,
+          });
+          repository.measureColumnsLayout();
+        } else if (x < xScrollThreshold) {
+          scrollOffset.current -= SCROLL_STEP;
+          scrollViewRef.current.scrollTo({
+            x: scrollOffset.current / dragSpeedFactor,
+            y: 0,
+            animated: true,
+          });
+          repository.measureColumnsLayout();
+        }
+      }
+    }
   };
 
   const onScroll = (event) => {
@@ -175,40 +224,71 @@ const DraggableBoard = ({
   );
 
   const renderHoverComponent = () => {
-    if (hoverComponent && hoverRowItem.current) {
-      const row = repository.findRow(hoverRowItem.current);
+    if (hoverComponent) {
+      if (hoverRowItem.current) {
+        const row = repository.findRow(hoverRowItem.current);
 
-      if (row && row.layout) {
-        const { x, y, width, height } = row.layout;
-        const hoverStyle = [
-          style.hoverComponent,
-          activeRowStyle,
-          {
-            transform: [
-              { translateX },
-              { translateY },
-              { rotate: `${activeRowRotation}deg` },
-            ],
-          },
-          {
-            top: y - yScrollThreshold,
-            left: x,
-            width,
-            height,
-          },
-        ];
+        if (row && row.layout) {
+          const { x, y, width, height } = row.layout;
+          const hoverStyle = [
+            style.hoverComponent,
+            activeRowStyle,
+            {
+              transform: [
+                { translateX },
+                { translateY },
+                { rotate: `${activeRowRotation}deg` },
+              ],
+            },
+            {
+              top: y - yScrollThreshold,
+              left: x,
+              width,
+              height,
+            },
+          ];
 
-        return (
-          <Animated.View style={hoverStyle}>{hoverComponent}</Animated.View>
-        );
+          return (
+            <Animated.View style={hoverStyle}>{hoverComponent}</Animated.View>
+          );
+        }
+      } else if (hoverColItem.current) {
+        const col = hoverColItem.current;
+
+        if (col && col.layout) {
+          const { x, y, width, height } = col.layout;
+          const hoverStyle = [
+            style.hoverComponent,
+            activeRowStyle,
+            {
+              transform: [
+                { translateX },
+                { translateY },
+                { rotate: `${activeColRotation}deg` },
+              ],
+            },
+            {
+              top: y - yScrollThreshold,
+              left: x,
+              width,
+              height,
+            },
+          ];
+
+          return (
+            <Animated.View style={hoverStyle}>{hoverComponent}</Animated.View>
+          );
+        }
       }
     }
   };
 
   const moveItem = async (hoverItem, Item, isColumn = false) => {
     Item.setHidden(true);
+    setIsColunm(isColumn);
     if (isColumn) {
       repository.hideCol(Item);
+      await Item.measureLayout();
       hoverColItem.current = { ...Item };
     } else {
       repository.hideRow(Item);
@@ -220,20 +300,45 @@ const DraggableBoard = ({
   };
 
   const drag = (column) => {
-    console.log('Drag Col : ', column.id);
-    const hoverColumn = renderColumnWrapper({
+    console.log('Drag Column : ', column);
+    if (onDragColStart) {
+      onDragColStart();
+    }
+
+    const key = keyExtractor(column, column.index);
+    const columnComponent = (
+      <Column
+        repository={repository}
+        column={column}
+        move={moveItem}
+        renderColumnWrapper={renderColumnWrapper}
+        keyExtractor={keyExtractor}
+        renderRow={renderRow}
+        scrollEnabled={false}
+        columnWidth={columnWidth}
+      />
+    );
+
+    const hoverComponent = renderColumnWrapper({
       move: moveItem,
       item: column.data,
       index: column.index,
+      columnComponent,
+      layoutProps: {
+        key: `Clone-${key}`,
+        ref: (ref) => repository.updateColumnRef(column.id, ref),
+        onLayout: (layout) => repository.updateColumnLayout(column.id),
+      },
     });
-    moveItem(hoverColumn, column, true);
+
+    moveItem(hoverComponent, column, true);
   };
 
   const renderColumns = () => {
     const columns = repository.getColumns();
     return columns.map((column, index) => {
       const key = keyExtractor(column, index);
-
+      const hidden = column.hidden ? style.invisible : style.visible;
       const columnComponent = (
         <Column
           repository={repository}
@@ -245,21 +350,32 @@ const DraggableBoard = ({
           scrollEnabled={!movingMode}
           columnWidth={columnWidth}
           onRowPress={onRowPress}
-          onDragRowStartCallback={onDragStart}
+          onDragRowStartCallback={onDragRowStart}
         />
       );
 
-      return renderColumnWrapper({
-        item: column.data,
-        index: column.index,
-        columnComponent,
-        drag: () => drag(column),
-        layoutProps: {
-          key,
-          ref: (ref) => repository.updateColumnRef(column.id, ref),
-          onLayout: (layout) => repository.updateColumnLayout(column.id),
-        },
-      });
+      return (
+        <TouchableWithoutFeedback
+          key={`Col-${index}`}
+          onLongPress={() => drag(column)}
+          delayLongPress={1000}
+          onPress={onColPress}
+        >
+          <Animated.View style={[hidden, style.container]}>
+            {renderColumnWrapper({
+              item: column.data,
+              index: column.index,
+              columnComponent,
+              drag: () => drag(column),
+              layoutProps: {
+                key,
+                ref: (ref) => repository.updateColumnRef(column.id, ref),
+                onLayout: (layout) => repository.updateColumnLayout(column.id),
+              },
+            })}
+          </Animated.View>
+        </TouchableWithoutFeedback>
+      );
     });
   };
 
@@ -292,7 +408,7 @@ const DraggableBoard = ({
                 ),
                 cond(
                   movingMode,
-                  call([translateX, translateY], handleColumnPosition),
+                  call([absoluteX, absoluteY], handleColumnPosition),
                 ),
               ])
             }

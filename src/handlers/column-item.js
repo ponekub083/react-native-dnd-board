@@ -23,6 +23,13 @@ export default class Column {
     };
   };
 
+  setId = (id) => {
+    this.id = id;
+    this.rows.forEach((row, index) => {
+      row.setColumnId(id);
+    });
+  };
+
   setRef = (ref) => {
     this.ref = ref;
   };
@@ -33,6 +40,10 @@ export default class Column {
 
   setLayout = (layout) => {
     this.layout = layout;
+  };
+
+  setData = (data) => {
+    this.data = data;
   };
 
   setHidden = (hidden) => {
