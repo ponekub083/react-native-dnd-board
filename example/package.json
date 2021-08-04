@@ -7,19 +7,19 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "reset": "rm -rf node_modules/ && yarn && react-native run-android"
   },
   "dependencies": {
     "react": "16.13.1",
     "react-native": "0.63.4",
-    "react-native-dnd-board": "github:ponekub083/react-native-dnd-board",
+    "react-native-dnd-board": "../",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-reanimated": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.13",
     "@babel/runtime": "^7.12.13",
-    "@react-native-community/eslint-config": "^2.0.0",
     "babel-jest": "^26.6.3",
     "eslint": "^7.19.0",
     "jest": "^26.6.3",

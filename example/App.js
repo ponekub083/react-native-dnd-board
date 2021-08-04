@@ -157,40 +157,33 @@ const App = () => {
     repository.deleteColumn(columnId);
   };
 
-  const renderColumn = ({
-    item,
-    columnComponent,
-    layoutProps,
-    index,
-    drag,
-  }) => {
+  const renderColumn = ({ item, columnComponent, layoutProps, index }) => {
     return (
-      <TouchableWithoutFeedback
-        key={`Col-${index}`}
-        onLongPress={drag}
-        delayLongPress={300}>
-        <View style={styles.column} {...layoutProps}>
-          <View style={styles.columnHeader}>
-            <Text style={styles.columnName}>{item.name}</Text>
-            <TouchableOpacity
-              hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-              onPress={() => deleteColumn(item.id)}>
-              <Text>✕</Text>
-            </TouchableOpacity>
-          </View>
-          {columnComponent}
+      <View style={[styles.column]} {...layoutProps}>
+        <View style={styles.columnHeader}>
+          <Text style={styles.columnName}>{item.name}</Text>
           <TouchableOpacity
-            style={styles.addCard}
-            onPress={() => addCard(item.id)}>
-            <Text>+ Add Card</Text>
+            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+            onPress={() => deleteColumn(item.id)}>
+            <Text>✕</Text>
           </TouchableOpacity>
         </View>
-      </TouchableWithoutFeedback>
+        {columnComponent}
+        <TouchableOpacity
+          style={styles.addCard}
+          onPress={() => addCard(item.id)}>
+          <Text>+ Add Card</Text>
+        </TouchableOpacity>
+      </View>
     );
   };
 
   const onCardPress = card => {
     console.log('Card ID: ', card.id);
+  };
+
+  const onColumnPress = col => {
+    console.log('Col ID: ', col.id);
   };
 
   const onDragEnd = (fromColumnId, toColumnId, card) => {
@@ -214,6 +207,7 @@ const App = () => {
         renderRow={renderCard}
         renderColumnWrapper={renderColumn}
         onRowPress={onCardPress}
+        onColPress={onColumnPress}
         onDragEnd={onDragEnd}
         columnWidth={COLUMN_WIDTH}
         accessoryRight={
