@@ -92,13 +92,6 @@ export default class Mover {
       } else if (current == fromColumnIndex) {
         repository.columns[columnId].index = toColumnIndex;
       }
-
-      // console.log(
-        'Column [',
-        columnId,
-        '] = ',
-        repository.columns[columnId].index,
-      );
     });
 
     if (Utils.isFunction(repository.reload)) {
