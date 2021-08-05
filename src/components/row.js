@@ -27,7 +27,7 @@ const Row = memo(
     return (
       <TouchableWithoutFeedback
         onLongPress={onDragBegin}
-        delayLongPress={300}
+        delayLongPress={1000}
         onPress={onPress}
       >
         <Animated.View style={hidden ? style.invisible : style.visible}>
