@@ -119,14 +119,14 @@ export default class Mover {
     const item = { ...firstItem };
 
     firstItem.setRef(secondItem.ref);
-    firstItem.setIndex(secondItem.index);
-    firstItem.setData(secondItem.data);
-    firstItem.setHidden(secondItem.hidden);
+    firstItem.setIndex(firstItem.index);
+    firstItem.setData(secondItem.rows);
+    firstItem.setHidden(firstItem.hidden);
 
     secondItem.setRef(item.ref);
-    secondItem.setIndex(item.index);
+    secondItem.setIndex(secondItem.index);
     secondItem.setData(item.data);
-    secondItem.setHidden(item.hidden);
+    secondItem.setHidden(secondItem.hidden);
   };
 
   switchRowItems = (firstItem, secondItem) => {

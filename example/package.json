@@ -8,6 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
+    "reinstall": "npm uninstall ../ && yarn add ../",
     "reset": "rm -rf node_modules/ && yarn && react-native run-android"
   },
   "dependencies": {

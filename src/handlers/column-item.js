@@ -42,6 +42,10 @@ export default class Column {
     this.layout = layout;
   };
 
+  setRows = (rows) => {
+    this.rows = rows;
+  };
+
   setData = (data) => {
     this.data = data;
   };
