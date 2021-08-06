@@ -38,7 +38,8 @@ const DraggableBoard = ({
   onColPress = () => {},
   onDragRowStart = () => {},
   onDragColStart = () => {},
-  onDragEnd = () => {},
+  onDragRowEnd = () => {},
+  onDragColEnd = () => {},
   style: boardStyle,
   horizontal = true,
 }) => {
@@ -98,16 +99,21 @@ const DraggableBoard = ({
           setHoverComponent(null);
           setMovingMode(false);
 
-          if (onDragEnd) {
-            onDragEnd(
-              isColunm
-                ? hoverColItem.current.oldColumnIndex
-                : hoverRowItem.current.oldColumnId,
-              isColunm
-                ? hoverColItem.current.columnIndex
-                : hoverRowItem.current.columnId,
-              isColunm ? hoverColItem.current : hoverRowItem.current,
-            );
+          if (onDragRowEnd && onDragColEnd) {
+            if (isColunm)
+              onDragColEnd(
+                hoverColItem.current.oldColumnData,
+                hoverColItem.current.columnData,
+                hoverColItem.current,
+              );
+            else
+              onDragRowEnd(
+                hoverRowItem.current.oldRowData,
+                hoverRowItem.current.rowData,
+                hoverRowItem.current.oldColumnData,
+                hoverRowItem.current.columnData,
+                hoverRowItem.current,
+              );
 
             repository.updateOriginalData();
           }
@@ -125,14 +131,21 @@ const DraggableBoard = ({
     }
   };
 
-  const listenRowChangeColumn = (fromColumnId, toColumnId) => {
-    hoverRowItem.current.columnId = toColumnId;
-    hoverRowItem.current.oldColumnId = fromColumnId;
+  const listenRowChangeColumn = (
+    fromRowData,
+    toRowData,
+    fromColData,
+    toColData,
+  ) => {
+    hoverRowItem.current.rowData = toRowData;
+    hoverRowItem.current.oldRowData = fromRowData;
+    hoverRowItem.current.columnData = toColData;
+    hoverRowItem.current.oldColumnData = fromColData;
   };
 
-  const listenColumnChange = (fromColumnId, toColumnId) => {
-    hoverColItem.current.columnIndex = toColumnId;
-    hoverColItem.current.oldColumnIndex = fromColumnId;
+  const listenColumnChange = (fromData, toData) => {
+    hoverColItem.current.columnData = toData;
+    hoverColItem.current.oldColumnData = fromData;
   };
 
   const handleRowPosition = ([x, y]) => {

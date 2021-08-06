@@ -356,9 +356,6 @@ export default class Repository {
       const toColumnId = columnAtPosition.id;
       if (toColumnId !== fromColumnId) {
         this.mover.moveToOtherColumn(this, row, fromColumnId, toColumnId);
-        if (changeColumnCallback) {
-          changeColumnCallback(fromColumnId, toColumnId);
-        }
       }
 
       const rowAtPosition = this.mover.findRowAtPosition(
@@ -367,6 +364,17 @@ export default class Repository {
         y,
         row,
       );
+
+      if (toColumnId !== fromColumnId || row.index != rowAtPosition.index) {
+        if (changeColumnCallback) {
+          changeColumnCallback(
+            row,
+            rowAtPosition,
+            this.columns[fromColumnId],
+            columnAtPosition,
+          );
+        }
+      }
 
       if (
         !rowAtPosition ||
@@ -404,10 +412,11 @@ export default class Repository {
     }
 
     const toColumnId = columnAtPosition;
+
     if (toColumnId.index !== fromColumnId.index) {
       this.mover.moveColumn(this, col, fromColumnId.index, toColumnId.index);
       if (changeColumnCallback) {
-        changeColumnCallback(fromColumnId, toColumnId);
+        changeColumnCallback(col, toColumnId);
       }
     }
 
