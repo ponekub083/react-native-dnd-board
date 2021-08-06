@@ -365,15 +365,13 @@ export default class Repository {
         row,
       );
 
-      if (toColumnId !== fromColumnId || row.index != rowAtPosition.index) {
-        if (changeColumnCallback) {
-          changeColumnCallback(
-            row,
-            rowAtPosition,
-            this.columns[fromColumnId],
-            columnAtPosition,
-          );
-        }
+      if (changeColumnCallback) {
+        changeColumnCallback(
+          row,
+          rowAtPosition,
+          this.columns[fromColumnId],
+          columnAtPosition,
+        );
       }
 
       if (
