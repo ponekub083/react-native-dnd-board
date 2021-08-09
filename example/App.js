@@ -186,21 +186,14 @@ const App = () => {
     console.log('Col ID: ', col.id);
   };
 
-  const onDragRowEnd = (fromRow, toRow, fromColumn, toColumn, card) => {
-    console.log(
-      `Drag [${card.id}]
-    ROW : form [${fromRow.index}]  to [${toRow.index}]
-    COL : form [${fromColumn.index}]  to [${toColumn.index}]`,
-    );
-  };
-  const onDragColEnd = (fromColumn, toColumn, Col) => {
+  const onDragEnd = (fromColumnId, toColumnId, card) => {
     //
 
     console.log(
-      `Drag Col [${Col.id}]
-      form [${fromColumn.index}]  to [${toColumn.index}]`,
+      `Drag [${card.id}]  > form [${fromColumnId}]  to [${toColumnId}]`,
     );
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#014A81" />
@@ -215,8 +208,7 @@ const App = () => {
         renderColumnWrapper={renderColumn}
         onRowPress={onCardPress}
         onColPress={onColumnPress}
-        onDragRowEnd={onDragRowEnd}
-        onDragColEnd={onDragColEnd}
+        onDragEnd={onDragEnd}
         columnWidth={COLUMN_WIDTH}
         accessoryRight={
           <View style={[styles.column, styles.addColumn]}>
