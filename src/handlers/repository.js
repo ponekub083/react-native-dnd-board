@@ -227,7 +227,6 @@ export default class Repository {
         })),
       };
     });
-    this.reload();
   };
 
   getItemsChanged = () => {
@@ -392,7 +391,7 @@ export default class Repository {
   moveCol = (draggedCol, x, y, changeColumnCallback) => {
     const col = this.columns[draggedCol.id];
 
-    const fromColumnId = col;
+    const fromColumnIndex = col.index;
     const columnAtPosition = this.mover.findColumnAtPosition(
       this.getColumns(),
       x,
@@ -403,11 +402,11 @@ export default class Repository {
       return;
     }
 
-    const toColumnId = columnAtPosition;
-    if (toColumnId.index !== fromColumnId.index) {
-      this.mover.moveColumn(this, col, fromColumnId.index, toColumnId.index);
+    const toColumnIndex = columnAtPosition.index;
+    if (toColumnIndex !== fromColumnIndex) {
+      this.mover.moveColumn(this, col, fromColumnIndex, toColumnIndex);
       if (changeColumnCallback) {
-        changeColumnCallback(fromColumnId, toColumnId);
+        changeColumnCallback(fromColumnIndex, toColumnIndex);
       }
     }
 
