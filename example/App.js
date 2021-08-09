@@ -186,11 +186,12 @@ const App = () => {
     console.log('Col ID: ', col.id);
   };
 
-  const onDragEnd = (fromColumnId, toColumnId, card) => {
+  const onDragEnd = (fromColumn, toColumn, obj) => {
     //
 
     console.log(
-      `Drag [${card.id}]  > form [${fromColumnId}]  to [${toColumnId}]`,
+      `move [${obj.id}] from [${fromColumn}] to [${toColumn}] INEDX : ${obj.rowIndex}`,
+      { obj, toColumn, fromColumn },
     );
   };
 
