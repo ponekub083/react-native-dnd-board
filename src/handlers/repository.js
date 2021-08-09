@@ -227,10 +227,6 @@ export default class Repository {
         })),
       };
     });
-
-    if (Utils.isFunction(this.reload)) {
-      this.reload();
-    }
   };
 
   getItemsChanged = () => {
@@ -359,6 +355,9 @@ export default class Repository {
       const toColumnId = columnAtPosition.id;
       if (toColumnId !== fromColumnId) {
         this.mover.moveToOtherColumn(this, row, fromColumnId, toColumnId);
+        if (changeColumnCallback) {
+          changeColumnCallback(fromColumnId, toColumnId);
+        }
       }
 
       const rowAtPosition = this.mover.findRowAtPosition(
@@ -367,15 +366,6 @@ export default class Repository {
         y,
         row,
       );
-
-      if (changeColumnCallback) {
-        changeColumnCallback(
-          row,
-          rowAtPosition,
-          this.columns[fromColumnId],
-          columnAtPosition,
-        );
-      }
 
       if (
         !rowAtPosition ||
@@ -401,7 +391,7 @@ export default class Repository {
   moveCol = (draggedCol, x, y, changeColumnCallback) => {
     const col = this.columns[draggedCol.id];
 
-    const fromColumnId = col;
+    const fromColumnIndex = col.index;
     const columnAtPosition = this.mover.findColumnAtPosition(
       this.getColumns(),
       x,
@@ -412,12 +402,11 @@ export default class Repository {
       return;
     }
 
-    const toColumnId = columnAtPosition;
-
-    if (toColumnId.index !== fromColumnId.index) {
-      this.mover.moveColumn(this, col, fromColumnId.index, toColumnId.index);
+    const toColumnIndex = columnAtPosition.index;
+    if (toColumnIndex !== fromColumnIndex) {
+      this.mover.moveColumn(this, col, fromColumnIndex, toColumnIndex);
       if (changeColumnCallback) {
-        changeColumnCallback(col, toColumnId);
+        changeColumnCallback(fromColumnIndex, toColumnIndex);
       }
     }
 
