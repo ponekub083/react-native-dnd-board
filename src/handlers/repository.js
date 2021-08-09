@@ -227,7 +227,10 @@ export default class Repository {
         })),
       };
     });
-    this.reload();
+
+    if (Utils.isFunction(this.reload)) {
+      this.reload();
+    }
   };
 
   getItemsChanged = () => {
