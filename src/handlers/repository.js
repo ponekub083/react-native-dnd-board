@@ -337,7 +337,7 @@ export default class Repository {
     return this.columns[row.columnId].rows.find((item) => item.id === row.id);
   };
 
-  moveRow = (draggedRow, x, y, changeColumnCallback) => {
+  moveRow = (draggedRow, x, y, changeColumnCallback, changeRowCallback) => {
     const rowIndex = this.columns[draggedRow.columnId].rows.findIndex(
       (item) => item.id === draggedRow.id,
     );
@@ -377,6 +377,10 @@ export default class Repository {
         draggedRow.id === rowAtPosition.id
       ) {
         return columnAtPosition;
+      }
+
+      if (changeRowCallback) {
+        changeRowCallback(row.index, rowAtPosition.index);
       }
 
       if (row.hidden && !rowAtPosition.hidden) {

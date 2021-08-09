@@ -130,6 +130,11 @@ const DraggableBoard = ({
     hoverRowItem.current.oldColumnId = fromColumnId;
   };
 
+  const listenRowChange = (fromIndex, toIndex) => {
+    hoverRowItem.current.rowIndex = toIndex;
+    hoverRowItem.current.oldRowIndex = fromIndex;
+  };
+
   const listenColumnChange = (fromColumnId, toColumnId) => {
     hoverColItem.current.columnIndex = toColumnId;
     hoverColItem.current.oldColumnIndex = fromColumnId;
@@ -142,6 +147,7 @@ const DraggableBoard = ({
         x,
         y,
         listenRowChangeColumn,
+        listenRowChange,
       );
 
       if (columnAtPosition && scrollViewRef.current) {
