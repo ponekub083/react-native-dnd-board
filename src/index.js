@@ -16,6 +16,7 @@ import style from './style';
 import Column from './components/column';
 import Repository from './handlers/repository';
 import Utils from './commons/utils';
+import ColumnClone from './components/columnClone';
 
 const { block, call, cond } = Animated;
 
@@ -313,8 +314,8 @@ const DraggableBoard = ({
 
     const key = keyExtractor(column, column.index);
     const columnComponent = (
-      <Column
-        repository={repository}
+      <ColumnClone
+        // repository={}
         column={column}
         move={moveItem}
         renderColumnWrapper={renderColumnWrapper}

@@ -53,17 +53,24 @@ const Column = ({
 
   const reload = () => {
     const items = repository.getRowsByColumnId(column.id);
+
+    console.log('Column reload : ', { id: column.id, items });
     setRows([...items]);
   };
 
   useEffect(() => {
-    repository.addListener(column.id, 'reload', reload);
+    console.log('Column useEffect : ', column.id);
+
+    const unsubscribe = repository.addListener(column.id, 'reload', reload);
+    return () => {
+      unsubscribe;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     setRows(column.rows);
-  }, [column.id, column.rows, column.rows.length, repository]);
+  }, [column.id, column.index, column.rows.length, repository]);
 
   const setRef = (ref) => {
     columnRef.current = ref;

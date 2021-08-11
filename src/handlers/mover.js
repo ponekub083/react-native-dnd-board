@@ -131,6 +131,7 @@ export default class Mover {
 
   switchRowItems = (firstItem, secondItem) => {
     if (!firstItem || !secondItem || !firstItem.layout || !secondItem.layout) {
+      console.log('switchRowItems : fail ');
       return;
     }
 
@@ -156,14 +157,16 @@ export default class Mover {
     toColumnId,
   ) => {
     let rows = repository.columns[toColumnId].rows;
-
+    console.log('switchRowItems');
     if (draggedRowIndex > rowAtPositionIndex) {
       // Move up
+      console.log('switchRowItems : Moven up');
       for (let i = draggedRowIndex - 1; i >= rowAtPositionIndex; i--) {
         this.switchRowItems(rows[i], rows[i + 1]);
       }
     } else {
       // Move down
+      console.log('switchRowItems : Moven down ');
       for (let i = draggedRowIndex; i < rowAtPositionIndex; i++) {
         this.switchRowItems(rows[i], rows[i + 1]);
       }
