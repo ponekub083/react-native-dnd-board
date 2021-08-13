@@ -33,6 +33,42 @@ const mockData = [
         id: '14',
         name: 'Row 4 (Column 1)',
       },
+      {
+        id: '15',
+        name: 'Row 5 (Column 1)',
+      },
+      {
+        id: '16',
+        name: 'Row 6 (Column 1)',
+      },
+      {
+        id: '17',
+        name: 'Row 7 (Column 1)',
+      },
+      {
+        id: '18',
+        name: 'Row 8 (Column 1)',
+      },
+      {
+        id: '19',
+        name: 'Row 9 (Column 1)',
+      },
+      {
+        id: '110',
+        name: 'Row 10 (Column 1)',
+      },
+      {
+        id: '111',
+        name: 'Row 11 (Column 1)',
+      },
+      {
+        id: '112',
+        name: 'Row 12 (Column 1)',
+      },
+      {
+        id: '113',
+        name: 'Row 13 (Column 1)',
+      },
     ],
   },
   {
@@ -76,6 +112,7 @@ mockData.forEach(column => {
 });
 
 const COLUMN_WIDTH = Dimensions.get('window').width * 0.6;
+const COLUMN_HEIGHT = Dimensions.get('window').height * 0.77;
 
 const App = () => {
   const [repository] = useState(new Repository(mockData));
@@ -159,7 +196,9 @@ const App = () => {
 
   const renderColumn = ({ item, columnComponent, layoutProps, index }) => {
     return (
-      <View style={[styles.column]} {...layoutProps}>
+      <View
+        style={[styles.column, { width: COLUMN_WIDTH + 32 }]}
+        {...layoutProps}>
         <View style={styles.columnHeader}>
           <Text style={styles.columnName}>{item.name}</Text>
           <TouchableOpacity
@@ -168,7 +207,7 @@ const App = () => {
             <Text>✕</Text>
           </TouchableOpacity>
         </View>
-        {columnComponent}
+        <View style={{ maxHeight: COLUMN_HEIGHT }}>{columnComponent}</View>
         <TouchableOpacity
           style={styles.addCard}
           onPress={() => addCard(item.id)}>

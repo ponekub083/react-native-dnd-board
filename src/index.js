@@ -40,6 +40,8 @@ const DraggableBoard = ({
   onDragRowStart = () => {},
   onDragColStart = () => {},
   onDragEnd = () => {},
+  delayDragRow = 1000,
+  delayDragCol = 1000,
   style: boardStyle,
   horizontal = true,
 }) => {
@@ -151,8 +153,9 @@ const DraggableBoard = ({
         listenRowChange,
       );
 
-      if (columnAtPosition && scrollViewRef.current) {
+      if (scrollViewRef.current) {
         // handle scroll horizontal
+
         if (x + xScrollThreshold > Utils.deviceWidth) {
           scrollOffset.current += SCROLL_STEP;
           scrollViewRef.current.scrollTo({
@@ -171,12 +174,17 @@ const DraggableBoard = ({
           repository.measureColumnsLayout();
         }
 
-        // handle scroll inside item
-        // if (y + SCROLL_THRESHOLD > columnAtPosition.layout.y) {
-        //   repository.columns[columnAtPosition.id].scrollOffset(y + SCROLL_STEP);
-        // } else if (y < SCROLL_THRESHOLD) {
-        //   repository.columns[columnAtPosition.id].scrollOffset(y - SCROLL_STEP);
-        // }
+        if (columnAtPosition) {
+          // handle scroll inside item
+
+          if (y + yScrollThreshold > Utils.deviceHeight) {
+            columnAtPosition.scrollToDown(SCROLL_STEP, dragSpeedFactor);
+            repository.measureColumnsLayout();
+          } else if (y < yScrollThreshold) {
+            columnAtPosition.scrollToUp(SCROLL_STEP, dragSpeedFactor);
+            repository.measureColumnsLayout();
+          }
+        }
       }
     }
   };
@@ -191,10 +199,9 @@ const DraggableBoard = ({
         listenColumnChange,
       );
 
-      if (columnAtIndex && scrollViewRef.current) {
+      if (scrollViewRef.current) {
         // handle scroll horizontal
 
-        // console.log({ x, xScrollThreshold, device: Utils.deviceWidth });
         if (x + xScrollThreshold > Utils.deviceWidth) {
           scrollOffset.current += SCROLL_STEP;
           scrollViewRef.current.scrollTo({
@@ -250,7 +257,7 @@ const DraggableBoard = ({
             {
               top: y - yScrollThreshold,
               left: x,
-              width,
+              width: width,
               height,
             },
           ];
@@ -275,13 +282,14 @@ const DraggableBoard = ({
               ],
             },
             {
-              top: y - yScrollThreshold,
+              top: y,
               left: x,
               width,
               height,
             },
           ];
 
+          console.log('hoverStyle : ', { hoverStyle, layout: col.layout });
           return (
             <Animated.View style={hoverStyle}>{hoverComponent}</Animated.View>
           );
@@ -334,7 +342,7 @@ const DraggableBoard = ({
       layoutProps: {
         key: `Clone-${key}`,
         ref: (ref) => repository.updateColumnRef(column.id, ref),
-        onLayout: (layout) => repository.updateColumnLayout(column.id),
+        /// onLayout: (layout) => repository.updateColumnLayout(column.id),
       },
     });
 
@@ -357,6 +365,7 @@ const DraggableBoard = ({
           scrollEnabled={!movingMode}
           columnWidth={columnWidth}
           onRowPress={onRowPress}
+          delayDrag={delayDragRow}
           onDragRowStartCallback={onDragRowStart}
         />
       );
@@ -365,7 +374,7 @@ const DraggableBoard = ({
         <TouchableWithoutFeedback
           key={`Col-${index}`}
           onLongPress={() => drag(column)}
-          delayLongPress={1000}
+          delayLongPress={delayDragCol}
           onPress={onColPress}
         >
           <Animated.View style={[hidden, style.container]}>

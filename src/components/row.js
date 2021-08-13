@@ -5,7 +5,15 @@ import Animated from 'react-native-reanimated';
 import style from '../style';
 
 const Row = memo(
-  ({ row, move, renderItem, hidden, onPress, onDragStartCallback }) => {
+  ({
+    row,
+    move,
+    renderItem,
+    hidden,
+    onPress,
+    delayDrag = 1000,
+    onDragStartCallback,
+  }) => {
     const onDragBegin = () => {
       if (onDragStartCallback) {
         onDragStartCallback();
@@ -27,7 +35,7 @@ const Row = memo(
     return (
       <TouchableWithoutFeedback
         onLongPress={onDragBegin}
-        delayLongPress={1000}
+        delayLongPress={delayDrag}
         onPress={onPress}
       >
         <Animated.View style={hidden ? style.invisible : style.visible}>

@@ -15,6 +15,7 @@ const Column = ({
   columnWidth,
   onDragStartCallback,
   onRowPress = () => {},
+  delayDrag = 1000,
 }) => {
   const [rows, setRows] = useState(column.rows);
 
@@ -22,12 +23,12 @@ const Column = ({
   const columnRef = useRef();
 
   const onScroll = useCallback((event) => {
-    verticalOffset.current = event.nativeEvent.contentOffset.x;
+    column.setVerticalOffset(event.nativeEvent.contentOffset.x);
   }, []);
 
   const onScrollEnd = useCallback(
     (event) => {
-      verticalOffset.current = event.nativeEvent.contentOffset.x;
+      column.setVerticalOffset(event.nativeEvent.contentOffset.x);
       column.measureRowLayout();
     },
     [column],
@@ -45,6 +46,7 @@ const Column = ({
           renderItem={renderRow}
           hidden={item.hidden}
           onPress={() => onRowPress(item)}
+          delayDrag={delayDrag}
           onDragStartCallback={onDragStartCallback}
         />
       </View>
@@ -78,7 +80,7 @@ const Column = ({
   };
 
   return (
-    <View style={{ width: columnWidth }}>
+    <View style={{ minWidth: columnWidth, width: columnWidth }}>
       <FlatList
         ref={setRef}
         data={rows}
