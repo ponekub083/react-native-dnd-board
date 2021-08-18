@@ -27,7 +27,7 @@ export default class Repository {
 
   notify(columnId, event) {
     if (this.listeners[columnId]) {
-      console.log(`listeners ${columnId}: `, this.listeners[columnId]);
+      // console.log(`listeners ${columnId}: `, this.listeners[columnId]);
       this.listeners[columnId][event]();
     }
   }
@@ -372,7 +372,7 @@ export default class Repository {
         y,
         row,
       );
-      console.log('moveRow : 1');
+      // console.log('moveRow : 1');
       if (
         !rowAtPosition ||
         row.id === rowAtPosition.id ||
@@ -381,14 +381,14 @@ export default class Repository {
         return columnAtPosition;
       }
 
-      console.log('moveRow : 2');
+      // console.log('moveRow : 2');
       if (changeRowCallback) {
-        console.log('moveRow : 3');
+        // console.log('moveRow : 3');
         changeRowCallback(row.index, rowAtPosition.index);
       }
 
       if (row.hidden && !rowAtPosition.hidden) {
-        console.log('moveRow : 4');
+        // console.log('moveRow : 4');
         this.mover.switchItemsBetween(
           this,
           row.index,
@@ -397,7 +397,7 @@ export default class Repository {
         );
       }
 
-      console.log('moveRow : 5');
+      // console.log('moveRow : 5');
       return columnAtPosition;
     }
   };

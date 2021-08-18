@@ -56,12 +56,12 @@ const Column = ({
   const reload = () => {
     const items = repository.getRowsByColumnId(column.id);
 
-    console.log('Column reload : ', { id: column.id, items });
+    // console.log('Column reload : ', { id: column.id, items });
     setRows([...items]);
   };
 
   useEffect(() => {
-    console.log('Column useEffect : ', column.id);
+    // console.log('Column useEffect : ', column.id);
 
     const unsubscribe = repository.addListener(column.id, 'reload', reload);
     return () => {

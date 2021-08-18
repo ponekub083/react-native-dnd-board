@@ -289,7 +289,7 @@ const DraggableBoard = ({
             },
           ];
 
-          console.log('hoverStyle : ', { hoverStyle, layout: col.layout });
+          // console.log('hoverStyle : ', { hoverStyle, layout: col.layout });
           return (
             <Animated.View style={hoverStyle}>{hoverComponent}</Animated.View>
           );
@@ -341,7 +341,7 @@ const DraggableBoard = ({
       columnComponent,
       layoutProps: {
         key: `Clone-${key}`,
-        ref: (ref) => repository.updateColumnRef(column.id, ref),
+        // ref: (ref) => repository.updateColumnRef(column.id, ref),
         /// onLayout: (layout) => repository.updateColumnLayout(column.id),
       },
     });
