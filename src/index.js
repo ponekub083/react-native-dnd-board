@@ -289,7 +289,6 @@ const DraggableBoard = ({
             },
           ];
 
-          // console.log('hoverStyle : ', { hoverStyle, layout: col.layout });
           return (
             <Animated.View style={hoverStyle}>{hoverComponent}</Animated.View>
           );
@@ -315,7 +314,6 @@ const DraggableBoard = ({
   };
 
   const drag = (column) => {
-    // console.log('Drag Column : ', column);
     if (onDragColStart) {
       onDragColStart();
     }

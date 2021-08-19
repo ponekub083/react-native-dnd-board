@@ -21,31 +21,31 @@ export default class Row {
     };
   };
 
-  setId = id => {
+  setId = (id) => {
     this.id = id;
   };
 
-  setRef = ref => {
+  setRef = (ref) => {
     this.ref = ref;
   };
 
-  setIndex = index => {
+  setIndex = (index) => {
     this.index = index;
   };
 
-  setLayout = layout => {
+  setLayout = (layout) => {
     this.layout = layout;
   };
 
-  setData = data => {
+  setData = (data) => {
     this.data = data;
   };
 
-  setColumnId = columnId => {
+  setColumnId = (columnId) => {
     this.columnId = columnId;
   };
 
-  setHidden = hidden => {
+  setHidden = (hidden) => {
     this.hidden = hidden;
   };
 

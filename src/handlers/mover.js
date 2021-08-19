@@ -72,23 +72,16 @@ export default class Mover {
       //
       const current = repository.columns[columnId].index;
 
-      // console.log('Column [', columnId, '] : Index [', current, ']');
-
       if (current > fromColumnIndex && current < toColumnIndex) {
         repository.columns[columnId].index -= 1;
-
-        // console.log('Condition 1 : -');
       } else if (current < fromColumnIndex && current > toColumnIndex) {
         repository.columns[columnId].index += 1;
-        // console.log('Condition 2 : +');
       } else if (current == toColumnIndex && current > fromColumnIndex) {
         // move to Rigth
         repository.columns[columnId].index -= 1;
-        // console.log('Condition 3 : -');
       } else if (current == toColumnIndex && current < fromColumnIndex) {
         //  move to Left
         repository.columns[columnId].index += 1;
-        // console.log('Condition 4 : +');
       } else if (current == fromColumnIndex) {
         repository.columns[columnId].index = toColumnIndex;
       }
@@ -131,7 +124,6 @@ export default class Mover {
 
   switchRowItems = (firstItem, secondItem) => {
     if (!firstItem || !secondItem || !firstItem.layout || !secondItem.layout) {
-      // console.log('switchRowItems : fail ');
       return;
     }
 
@@ -157,16 +149,13 @@ export default class Mover {
     toColumnId,
   ) => {
     let rows = repository.columns[toColumnId].rows;
-    // console.log('switchRowItems');
     if (draggedRowIndex > rowAtPositionIndex) {
       // Move up
-      // console.log('switchRowItems : Moven up');
       for (let i = draggedRowIndex - 1; i >= rowAtPositionIndex; i--) {
         this.switchRowItems(rows[i], rows[i + 1]);
       }
     } else {
       // Move down
-      // console.log('switchRowItems : Moven down ');
       for (let i = draggedRowIndex; i < rowAtPositionIndex; i++) {
         this.switchRowItems(rows[i], rows[i + 1]);
       }
