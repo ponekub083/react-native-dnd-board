@@ -7,7 +7,7 @@ export default class Column {
     index,
     data,
     rows,
-    verticalOffset = { x: 0, y: 0 },
+    verticalOffset = 0,
   }) {
     this.ref = ref;
     this.scrollRef = scrollRef;

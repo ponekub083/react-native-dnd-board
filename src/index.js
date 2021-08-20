@@ -179,10 +179,10 @@ const DraggableBoard = ({
 
           if (y + yScrollThreshold > Utils.deviceHeight) {
             columnAtPosition.scrollToDown(SCROLL_STEP, dragSpeedFactor);
-            repository.measureColumnsLayout();
+            // repository.measureColumnsLayout();
           } else if (y < yScrollThreshold) {
             columnAtPosition.scrollToUp(SCROLL_STEP, dragSpeedFactor);
-            repository.measureColumnsLayout();
+            // repository.measureColumnsLayout();
           }
         }
       }
