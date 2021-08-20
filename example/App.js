@@ -8,9 +8,12 @@ import {
   TouchableOpacity,
   Dimensions,
   TouchableWithoutFeedback,
+  TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
 
 import Board, { Repository } from 'react-native-dnd-board';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const mockData = [
   {
@@ -196,9 +199,14 @@ const App = () => {
 
   const renderColumn = ({ item, columnComponent, layoutProps, index }) => {
     return (
-      <View
-        style={[styles.column, { width: COLUMN_WIDTH + 32 }]}
-        {...layoutProps}>
+      <KeyboardAvoidingView
+        {...layoutProps}
+        style={[{ flex: 1, ...styles.column }, { width: COLUMN_WIDTH + 32 }]}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset={
+          Platform.OS === 'ios' ? (Platform.isPad ? 20 : 48) : 0
+        }
+        enabled>
         <View style={styles.columnHeader}>
           <Text style={styles.columnName}>{item.name}</Text>
           <TouchableOpacity
@@ -207,13 +215,13 @@ const App = () => {
             <Text>✕</Text>
           </TouchableOpacity>
         </View>
-        <View style={{ maxHeight: COLUMN_HEIGHT }}>{columnComponent}</View>
+        <View style={{ flex: 1, paddingBottom: 16 }}>{columnComponent}</View>
         <TouchableOpacity
           style={styles.addCard}
           onPress={() => addCard(item.id)}>
           <Text>+ Add Card</Text>
         </TouchableOpacity>
-      </View>
+      </KeyboardAvoidingView>
     );
   };
 
@@ -238,7 +246,7 @@ const App = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#014A81" />
       <View style={styles.header}>
-        <Text style={styles.hederName}>React Native DnD Board</Text>
+        <TextInput style={styles.hederName}>React Native DnD Board</TextInput>
       </View>
 
       <Board

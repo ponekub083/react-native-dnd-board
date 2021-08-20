@@ -9,7 +9,8 @@
     "test": "jest",
     "lint": "eslint .",
     "reinstall": "npm uninstall ../ && yarn add ../",
-    "reset": "rm -rf node_modules/ && yarn && react-native run-android"
+    "reset": "rm -rf node_modules/ && yarn && react-native run-android",
+    "game": "yarn add ../ && react-native run-android"
   },
   "dependencies": {
     "react": "16.13.1",
