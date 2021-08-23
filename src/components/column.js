@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { TouchableWithoutFeedback, View } from 'react-native';
+import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
-import style from '../style';
 import Row from './row';
 
 const Column = ({
@@ -23,12 +21,16 @@ const Column = ({
   const columnRef = useRef();
 
   const onScroll = useCallback((event) => {
-    column.setVerticalOffset(event.nativeEvent.contentOffset.x);
+    column.setMaxVertical(
+      event.nativeEvent.contentSize.height -
+        event.nativeEvent.layoutMeasurement.height,
+    );
+    column.setVerticalOffset(event.nativeEvent.contentOffset.y);
   }, []);
 
   const onScrollEnd = useCallback(
     (event) => {
-      column.setVerticalOffset(event.nativeEvent.contentOffset.x);
+      column.setVerticalOffset(event.nativeEvent.contentOffset.y);
       column.measureRowLayout();
     },
     [column],
@@ -96,3 +98,4 @@ const Column = ({
 };
 
 export default Column;
+ห;

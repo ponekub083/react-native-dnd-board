@@ -11,6 +11,7 @@ export default class Column {
   }) {
     this.ref = ref;
     this.scrollRef = scrollRef;
+    this.maxVertical = 0;
     this.verticalOffset = verticalOffset;
     this.layout = layout;
     this.id = id;
@@ -24,6 +25,7 @@ export default class Column {
     return {
       ref: this.ref,
       scrollRef: this.scrollRef,
+      maxVertical: this.maxVertical,
       verticalOffset: this.verticalOffset,
       layout: this.layout,
       id: this.id,
@@ -65,6 +67,10 @@ export default class Column {
     this.hidden = hidden;
   };
 
+  setMaxVertical = (max) => {
+    this.maxVertical = max;
+  };
+
   setVerticalOffset = (verticalOffset) => {
     this.verticalOffset = verticalOffset;
   };
@@ -81,7 +87,9 @@ export default class Column {
 
   scrollToUp = (SCROLL_STEP, dragSpeedFactor) => {
     if (this.scrollRef) {
-      this.verticalOffset -= SCROLL_STEP;
+      if (this.verticalOffset <= 0) this.verticalOffset = 0;
+      else this.verticalOffset -= SCROLL_STEP;
+
       this.scrollRef.scrollToOffset({
         offset: this.verticalOffset / dragSpeedFactor,
         animated: true,
@@ -91,7 +99,9 @@ export default class Column {
 
   scrollToDown = (SCROLL_STEP, dragSpeedFactor) => {
     if (this.scrollRef) {
-      this.verticalOffset += SCROLL_STEP;
+      if (this.verticalOffset >= this.maxVertical && this.maxVertical != 0)
+        this.verticalOffset = this.maxVertical;
+      else this.verticalOffset += SCROLL_STEP;
       this.scrollRef.scrollToOffset({
         offset: this.verticalOffset * dragSpeedFactor,
         animated: true,

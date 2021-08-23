@@ -176,13 +176,16 @@ const DraggableBoard = ({
 
         if (columnAtPosition) {
           // handle scroll inside item
+          const {
+            layout: { x: xx, y: yy, width, height },
+          } = columnAtPosition;
 
-          if (y + yScrollThreshold > Utils.deviceHeight) {
+          if (y > height - yy - yScrollThreshold) {
             columnAtPosition.scrollToDown(SCROLL_STEP, dragSpeedFactor);
-            // repository.measureColumnsLayout();
-          } else if (y < yScrollThreshold) {
+            repository.measureColumnsLayout();
+          } else if (y < yy + yScrollThreshold) {
             columnAtPosition.scrollToUp(SCROLL_STEP, dragSpeedFactor);
-            // repository.measureColumnsLayout();
+            repository.measureColumnsLayout();
           }
         }
       }

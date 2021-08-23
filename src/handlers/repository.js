@@ -100,10 +100,7 @@ export default class Repository {
       this.originalData[column.id] = {
         id: column.id,
         index: columnIndex,
-        rows: rows.map((row) => ({
-          id: row.id,
-          index: row.index,
-        })),
+        rows,
       };
     });
 
