@@ -10,7 +10,7 @@ import {
   State,
   ScrollView,
 } from 'react-native-gesture-handler';
-import { TouchableWithoutFeedback, View } from 'react-native';
+import { TouchableWithoutFeedback, View, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
 import style from './style';
 import Column from './components/column';
@@ -21,9 +21,11 @@ import ColumnClone from './components/columnClone';
 const { block, call, cond } = Animated;
 
 const SCROLL_THRESHOLD = Utils.deviceWidth * 0.15;
-const SCROLL_STEP_HORIZONTAL = Utils.deviceWidth * 0.1;
-const SCROLL_STEP_VERTICAL = Utils.deviceWidth * 0.1;
 const SCROLL_STEP = 8;
+const SCROLL_STEP_HORIZONTAL =
+  Platform.OS === 'ios' ? Utils.deviceWidth * 0.1 : SCROLL_STEP;
+const SCROLL_STEP_VERTICAL =
+  Platform.OS === 'ios' ? Utils.deviceHeight * 0.1 : SCROLL_STEP;
 
 const DraggableBoard = ({
   repository,
