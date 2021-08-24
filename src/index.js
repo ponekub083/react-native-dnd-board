@@ -21,6 +21,8 @@ import ColumnClone from './components/columnClone';
 const { block, call, cond } = Animated;
 
 const SCROLL_THRESHOLD = Utils.deviceWidth * 0.15;
+const SCROLL_STEP_HORIZONTAL = Utils.deviceWidth * 0.1;
+const SCROLL_STEP_VERTICAL = Utils.deviceWidth * 0.1;
 const SCROLL_STEP = 8;
 
 const DraggableBoard = ({
@@ -157,7 +159,7 @@ const DraggableBoard = ({
         // handle scroll horizontal
 
         if (x + xScrollThreshold > Utils.deviceWidth) {
-          scrollOffset.current += SCROLL_STEP;
+          scrollOffset.current += SCROLL_STEP_HORIZONTAL;
           scrollViewRef.current.scrollTo({
             x: scrollOffset.current * dragSpeedFactor,
             y: 0,
@@ -165,7 +167,7 @@ const DraggableBoard = ({
           });
           repository.measureColumnsLayout();
         } else if (x < xScrollThreshold) {
-          scrollOffset.current -= SCROLL_STEP;
+          scrollOffset.current -= SCROLL_STEP_HORIZONTAL;
           scrollViewRef.current.scrollTo({
             x: scrollOffset.current / dragSpeedFactor,
             y: 0,
@@ -181,10 +183,13 @@ const DraggableBoard = ({
           } = columnAtPosition;
 
           if (y > height - yy - yScrollThreshold) {
-            columnAtPosition.scrollToDown(SCROLL_STEP, dragSpeedFactor);
+            columnAtPosition.scrollToDown(
+              SCROLL_STEP_VERTICAL,
+              dragSpeedFactor,
+            );
             repository.measureColumnsLayout();
           } else if (y < yy + yScrollThreshold) {
-            columnAtPosition.scrollToUp(SCROLL_STEP, dragSpeedFactor);
+            columnAtPosition.scrollToUp(SCROLL_STEP_VERTICAL, dragSpeedFactor);
             repository.measureColumnsLayout();
           }
         }
@@ -206,7 +211,7 @@ const DraggableBoard = ({
         // handle scroll horizontal
 
         if (x + xScrollThreshold > Utils.deviceWidth) {
-          scrollOffset.current += SCROLL_STEP;
+          scrollOffset.current += SCROLL_STEP_HORIZONTAL;
           scrollViewRef.current.scrollTo({
             x: scrollOffset.current * dragSpeedFactor,
             y: 0,
@@ -214,7 +219,7 @@ const DraggableBoard = ({
           });
           repository.measureColumnsLayout();
         } else if (x < xScrollThreshold) {
-          scrollOffset.current -= SCROLL_STEP;
+          scrollOffset.current -= SCROLL_STEP_HORIZONTAL;
           scrollViewRef.current.scrollTo({
             x: scrollOffset.current / dragSpeedFactor,
             y: 0,
