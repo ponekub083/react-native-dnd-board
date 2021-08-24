@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 
 import Board, { Repository } from 'react-native-dnd-board';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const mockData = [
   {
