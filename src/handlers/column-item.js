@@ -8,6 +8,7 @@ export default class Column {
     data,
     rows,
     verticalOffset = 0,
+    hidden = false,
   }) {
     this.ref = ref;
     this.scrollRef = scrollRef;
@@ -18,7 +19,7 @@ export default class Column {
     this.index = index;
     this.data = data;
     this.rows = rows;
-    this.hidden = false;
+    this.hidden = hidden;
   }
 
   getAttributes = () => {

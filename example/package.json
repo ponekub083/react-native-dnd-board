@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "reinstall": "npm uninstall ../ && yarn add ../",
     "reset": "rm -rf node_modules/ && yarn && react-native run-android",
-    "game": "yarn add ../ && react-native run-android"
+    "game": "npm uninstall react-native-dnd-board && yarn add ../ && react-native run-android"
   },
   "dependencies": {
     "react": "16.13.1",

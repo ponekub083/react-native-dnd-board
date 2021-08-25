@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   TextInput,
   KeyboardAvoidingView,
+  Button,
 } from 'react-native';
 
 import Board, { Repository } from 'react-native-dnd-board';
@@ -198,29 +199,32 @@ const App = () => {
 
   const renderColumn = ({ item, columnComponent, layoutProps, index }) => {
     return (
-      <KeyboardAvoidingView
-        {...layoutProps}
-        style={[{ flex: 1, ...styles.column }, { width: COLUMN_WIDTH + 32 }]}
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={
-          Platform.OS === 'ios' ? (Platform.isPad ? 20 : 48) : 0
-        }
-        enabled>
-        <View style={styles.columnHeader}>
-          <Text style={styles.columnName}>{item.name}</Text>
+      <View
+        style={{ flex: 1, margin: 8, width: COLUMN_WIDTH + 32 }}
+        {...layoutProps}>
+        <KeyboardAvoidingView
+          style={[{ flex: 1, ...styles.column }]}
+          behavior={Platform.OS === 'ios' ? 'padding' : null}
+          keyboardVerticalOffset={
+            Platform.OS === 'ios' ? (Platform.isPad ? 20 : 48) : 0
+          }
+          enabled>
+          <View style={styles.columnHeader}>
+            <Text style={styles.columnName}>{item.name}</Text>
+            <TouchableOpacity
+              hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+              onPress={() => deleteColumn(item.id)}>
+              <Text>✕</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ flex: 1, paddingBottom: 16 }}>{columnComponent}</View>
           <TouchableOpacity
-            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-            onPress={() => deleteColumn(item.id)}>
-            <Text>✕</Text>
+            style={styles.addCard}
+            onPress={() => addCard(item.id)}>
+            <Text>+ Add Card</Text>
           </TouchableOpacity>
-        </View>
-        <View style={{ flex: 1, paddingBottom: 16 }}>{columnComponent}</View>
-        <TouchableOpacity
-          style={styles.addCard}
-          onPress={() => addCard(item.id)}>
-          <Text>+ Add Card</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </View>
     );
   };
 
@@ -245,7 +249,8 @@ const App = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#014A81" />
       <View style={styles.header}>
-        <TextInput style={styles.hederName}>React Native DnD Board</TextInput>
+        <Text style={styles.hederName}>React Native DnD Board</Text>
+        <Button title="reload" onPress={() => repository.reload()} />
       </View>
 
       <Board

@@ -139,6 +139,15 @@ export default class Repository {
     }
   };
 
+  updateAllColumn = (columns) => {
+    columns.forEach((data) => {
+      this.columns[data.id] = new ColumnItem({
+        ...this.columns[data.id],
+        ...data,
+      });
+    });
+  };
+
   deleteColumn = (columnId) => {
     delete this.columns[columnId];
     delete this.originalData[columnId];
@@ -412,11 +421,31 @@ export default class Repository {
     }
 
     const toColumnIndex = columnAtPosition.index;
-    if (toColumnIndex !== fromColumnIndex) {
-      if (changeColumnCallback) {
-        changeColumnCallback(fromColumnIndex, toColumnIndex);
-      }
-      this.mover.moveColumn(this, col, fromColumnIndex, toColumnIndex);
+    // if (toColumnIndex !== fromColumnIndex) {
+    //   if (changeColumnCallback) {
+    //     changeColumnCallback(fromColumnIndex, toColumnIndex);
+    //   }
+    //   this.mover.moveColumn(this, col, fromColumnIndex, toColumnIndex);
+    // }
+
+    if (
+      !columnAtPosition ||
+      col.id === columnAtPosition.id ||
+      draggedCol.id === columnAtPosition.id
+    ) {
+      return columnAtPosition;
+    }
+
+    if (changeColumnCallback) {
+      changeColumnCallback(fromColumnIndex, toColumnIndex);
+    }
+
+    if (col.hidden && !columnAtPosition.hidden) {
+      this.mover.switchColumnItemsBetween(
+        this,
+        col.index,
+        columnAtPosition.index,
+      );
     }
 
     return columnAtPosition;

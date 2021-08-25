@@ -111,15 +111,9 @@ export default class Mover {
 
     const item = { ...firstItem };
 
-    firstItem.setRef(secondItem.ref);
-    firstItem.setIndex(firstItem.index);
-    firstItem.setData(secondItem.rows);
-    firstItem.setHidden(firstItem.hidden);
+    firstItem.setIndex(secondItem.index);
 
-    secondItem.setRef(item.ref);
-    secondItem.setIndex(secondItem.index);
-    secondItem.setData(item.data);
-    secondItem.setHidden(secondItem.hidden);
+    secondItem.setIndex(item.index);
   };
 
   switchRowItems = (firstItem, secondItem) => {
@@ -163,5 +157,32 @@ export default class Mover {
 
     repository.columns[toColumnId].measureRowIndex();
     repository.notify(toColumnId, 'reload');
+  };
+
+  switchColumnItemsBetween = (
+    repository,
+    draggedColIndex,
+    colAtPositionIndex,
+  ) => {
+    let columns = repository.getColumns();
+
+    if (draggedColIndex > colAtPositionIndex) {
+      // Move up
+      for (let i = draggedColIndex - 1; i >= colAtPositionIndex; i--) {
+        this.switchColumnItems(columns[i], columns[i + 1]);
+      }
+    } else {
+      // Move down
+      for (let i = draggedColIndex; i < colAtPositionIndex; i++) {
+        this.switchColumnItems(columns[i], columns[i + 1]);
+      }
+    }
+
+    repository.updateAllColumn(columns);
+    repository.measureColumnsLayout();
+
+    if (Utils.isFunction(repository.reload)) {
+      repository.reload();
+    }
   };
 }
