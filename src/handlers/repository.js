@@ -341,6 +341,7 @@ export default class Repository {
     );
     if (rowIndex > -1) {
       this.columns[row.columnId].rows[rowIndex].setHidden(false);
+      this.notify(row.columnId, 'reload');
     }
   };
 
@@ -410,7 +411,7 @@ export default class Repository {
     const col = this.columns[draggedCol.id];
 
     const fromColumnIndex = col.index;
-    const columnAtPosition = this.mover.findColumnAtPosition(
+    const columnAtPosition = this.mover.findColumnAtPositionV2(
       this.getColumns(),
       x,
       y,
@@ -431,7 +432,8 @@ export default class Repository {
     if (
       !columnAtPosition ||
       col.id === columnAtPosition.id ||
-      draggedCol.id === columnAtPosition.id
+      draggedCol.id === columnAtPosition.id ||
+      draggedCol.index === columnAtPosition.index
     ) {
       return columnAtPosition;
     }

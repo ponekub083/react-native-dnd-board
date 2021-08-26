@@ -26,6 +26,23 @@ export default class Mover {
     });
   };
 
+  findColumnAtPositionV2 = (columns, x, y) => {
+    return columns.find((column) => {
+      let layout = column.layout;
+
+      if (!layout) {
+        return false;
+      }
+
+      const left = x > layout.x + this.THRESHOLD;
+      const right = x < layout.x + layout.width - this.THRESHOLD;
+      const up = y > layout.y;
+      const down = y < layout.y + layout.height;
+
+      return layout && left && right && up && down;
+    });
+  };
+
   selectItem = (x, y, draggedRow, item) => {
     const layout = item.layout;
     if (!layout || !draggedRow.layout) {
